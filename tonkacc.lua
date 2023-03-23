@@ -1,89 +1,18 @@
-getgenv().TONKA = {
-    TRACER = {
-        AIM = {
-            AIM_PART = "UpperTorso",
-            CHECK_IF_JUMPED_AIMPART = "HumanoidRootPart",
-            KEYBIND = "e",
-            DISTANCE = 600, 
-            ENABLED = true,
-            CHECK_IF_JUMPED = false
-        },
-        CONFIG = {
-            PREDICT_MOVEMENT = false,
-            PREDICTION = 9.7,
-            UNLOCK_ON_DEATH = true,
-            UNLOCK_ON_YOURDEATH = true,
-            EASING_STYLE = "Exponential", -- (to change the curve style go here--->https://create.roblox.com/docs/reference/engine/enums/EasingStyle)
-            USE_JUMP_EASING = true,
-            JUMP_EASING_STYLE = "Quad",-- https://create.roblox.com/docs/reference/engine/enums/EasingStyle
-        },
-        SMOOTHNESS = {
-            USE_SMOOTHNESS = true,
-            SMOOTHNESS_AMOUNT = 0.018,
-            SMOOTHNESS_Y = true,
-            SMOOTHNESS_Y_VALUE = 0.0360, 
-            SHAKE = true, 
-            SHAKE_VALUE = {
-                X = 25,
-                Y = 25,
-                Z = 25
-            }
-        },
-        FOV = {
-            SHOW_FOV = false,
-            FOV_SIDES = 25,
-            FOV_COLOR = "Red", -- Red Black Purple Pink Yellow Grey Blue White
-        }
-    }
-}
-getgenv().TONKA_CC = {
-    SILENT_CONFIGS = {
+getgenv().Tonka = { -- TONKA LEAKED BY FEDS
+    TonkaSilent = {
         Enabled = true,
         Part = "HumanoidRootPart",
         Pred = 0.119,
         ClosestPart = true,
         Keybind = "b",
-        DistanceDivided = 2 -- this divides the dides the distance of the closest body part so how far or close your mouse has to be from the next body part (2, 0.5, and 1.5 recommended) use 1 for regular
-    },
-    CHARACTER_CONFIGS = {
+        DistanceDivided = 2, -- this divides the dides the distance of the closest body part so how far or close your mouse has to be from the next body part (2, 0.5, and 1.5 recommended) use 1 for regular
         UnlockOnDeath = true,
         UnlockOnYourDeath = true,
         AntiGroundShots = true
     },
-    FOV_CONFIGS = {
-        Visible = false,
-        Radients = 10,
-        GunFOV =  {
-            Enabled = false,
-            ["Double-Barrel SG"] = {
-                ["FOV"] = 15
-            },
-            ["Revolver"] = {
-                ["FOV"] = 10
-            },
-            ["SMG"] = {
-                ["FOV"] = 23
-            },
-            ["Shotgun"] = { 
-                ["FOV"] = 20
-            },
-            ["Rifle"] = {
-                ["FOV"] = 20
-            },
-            ["TacticalShotgun"] = {
-                ["FOV"] = 24
-            },
-            ["Silencer"] = {
-                ["FOV"] = 17
-            }, 
-            ["AK47"] = { 
-                ["FOV"] = 10
-            }, 
-            ["AR"] = { 
-                ["FOV"] = 10
-            }, 
-            -- // add your own 
-        }
+    Fov = {
+        Visible = true,
+        Radius = 50
     },
     Resolver = {
         Enabled = {false, 5, -5}, -- two numbers are min and maxium 5 is recomended
@@ -94,10 +23,6 @@ getgenv().TONKA_CC = {
         }
     }
 }
-if (not getgenv().Tonka or TonkaSilent) then
-    return Tonka
-end
-
 local Players, Client, Mouse, RS, Camera, r =
 	game:GetService("Players"),
 	game:GetService("Players").LocalPlayer,
@@ -116,8 +41,8 @@ local UpdateFOV = function ()
     end
 
     if Tonka then
-        Circle.Visible = Tonka.FOV["Visible"]
-        Circle.Radius = Tonka.FOV.Radius * 3
+        Circle.Visible = Tonka.Fov["Visible"]
+        Circle.Radius = Tonka.Fov.Radius * 3
     else
         return Tonka
     end
@@ -191,7 +116,6 @@ local GetClosestBodyPart = function (character)
     return BodyPart
 end
 
-
 local Prey
 local PartToUse = Tonka.TonkaSilent.Part
 
@@ -201,12 +125,12 @@ task.spawn(function ()
             if Tonka.TonkaSilent.Enabled and Tonka.TonkaSilent.ClosestPart == true then
                 PartToUse = tostring(GetClosestBodyPart(Prey.Character))
             end
-            if Tonka.Config.UnlockOnDeath == true then
+            if Tonka.TonkaSilent.UnlockOnDeath == true then
                 if Prey.Character.Humanoid.Health < 2 then
                     Prey = nil
                 end
             end
-            if Tonka.Config.UnlockOnYourDeath == true then
+            if Tonka.TonkaSilent.UnlockOnYourDeath == true then
                 if Client.Character.Humanoid.Health < 2 then
                     Prey = nil
                 end
@@ -217,7 +141,7 @@ task.spawn(function ()
 					playertoresolve.Velocity = Vector3.new(0, 0, 0)
 				end
 			end
-			if Tonka.Config.AntiGroundShots then
+			if Tonka.TonkaSilent.AntiGroundShots then
 				pcall(function()
                     local TargetVelv5 = Prey.Character[Tonka.TonkaSilent.Part]
                     TargetVelv5.Velocity = Vector3.new(TargetVelv5.Velocity.X, (TargetVelv5.Velocity.Y * 0.5), TargetVelv5.Velocity.Z)
@@ -251,31 +175,4 @@ grmt.__index = newcclosure(function(self, v)
         end
     end
     return backupindex(self, v)
-end)
-
-
-
-local Script = {Functions = {}}
-    Script.Functions.getToolName = function(name)
-        local split = string.split(string.split(name, "[")[2], "]")[1]
-        return split
-    end
-    Script.Functions.getEquippedWeaponName = function()
-        if (Client.Character) and Client.Character:FindFirstChildWhichIsA("Tool") then
-           local Tool =  Client.Character:FindFirstChildWhichIsA("Tool")
-           if string.find(Tool.Name, "%[") and string.find(Tool.Name, "%]") and not string.find(Tool.Name, "Wallet") and not string.find(Tool.Name, "Phone") then
-              return Script.Functions.getToolName(Tool.Name)
-           end
-        end
-        return nil
-    end
-    RS.RenderStepped:Connect(function()
-    if Script.Functions.getEquippedWeaponName() ~= nil then
-        local WeaponTonka = Tonka.FOV.GunFOV[Script.Functions.getEquippedWeaponName()]
-        if WeaponTonka ~= nil and Tonka.FOV.GunFOV.Enabled == true then
-            Tonka.FOV.Radius = WeaponTonka.FOV 
-        else
-            Tonka.FOV.Radius = Tonka.FOV.Radius
-        end
-    end
 end)
