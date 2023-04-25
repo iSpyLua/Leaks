@@ -1,7 +1,5 @@
 # Leaked Scripts
 
-Welcome to the "Leaked Scripts" repository! This repository is dedicated to providing a collection of leaked scripts from various video games.
-
 ## Table of Contents
 
 - [About](#about)
